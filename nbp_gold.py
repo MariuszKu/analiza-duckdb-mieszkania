@@ -39,7 +39,7 @@ options.headless = True
 driver = webdriver.Chrome(service=ChromeService( 
 	ChromeDriverManager().install()), options=options) 
  
-with open("gold.csv","a+") as file:
+with open("data/gold.csv","a+") as file:
     for last_day in last_days_of_months:
         url = f'https://nbp.pl/cena-zlota-archiwum/cena-zlota-z-dnia-{last_day}/' 
         

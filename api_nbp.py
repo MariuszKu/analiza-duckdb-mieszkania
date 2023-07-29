@@ -61,16 +61,7 @@ if __name__ == "__main__":
     end_year = 2023
     first_last_days_of_years = create_array_first_last_day_of_year(start_year, end_year)
 
-    #with open("gold_2013.csv", "w") as file:
-    #    for date in first_last_days_of_years:
-    #        gold_prices_data = import_gold_prices(date)
-
-    #        if gold_prices_data:
-    #            for date, price in gold_prices_data:
-    #                print(f"{date},{price:.2f}")
-    #                file.write(f"{date},{price:.2f}\n")
-
-    with open("usd.csv", "w") as file:
+    with open("data/usd.csv", "w") as file:
         for date in first_last_days_of_years:
             gold_prices_data = import_usd_prices(date)
 
