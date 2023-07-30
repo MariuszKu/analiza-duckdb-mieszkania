@@ -1,6 +1,6 @@
 import airflow
 from airflow import DAG
-from airflow.decorators import task
+from airflow.decorators import task, task_group
 from airflow.operators.python import PythonOperator
 import datetime
 import os
@@ -57,10 +57,17 @@ with DAG(dag_id="NBP-flats", default_args=default_args, catchup=False) as dag:
     def clean_data_currency():
         clean_currency()
 
+    @task_group
+    def clean():
+        clean_data_flats()
+        clean_data_salary()
+        clean_data_m1()
+        clean_data_currency()
+
+
     # Dependencies
-    [import_currency, import_flat_data] >> [
-        clean_data_flats,
-        clean_data_salary,
-        clean_data_m1,
-        clean_data_currency,
-    ]
+    import_currency() 
+    import_flat_data ()
+    clean()
+        
+    
