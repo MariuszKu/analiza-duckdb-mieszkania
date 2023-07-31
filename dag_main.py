@@ -8,6 +8,7 @@ import sys
 from api_nbp import save_usd_df
 from flat_price import import_flat_price
 from clean import *
+from main import report
 
 # Creating an Environmental Variable for the service key configuration
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/opt/airflow/dags/key.json'
@@ -52,7 +53,7 @@ with DAG(dag_id="NBP-flats", default_args=default_args, catchup=False) as dag:
 
     @task
     def create_report():
-        clean()
+        report()
 
     # Dependencies
     import_currency() >> import_flat_data() >> clean() >> create_report()
