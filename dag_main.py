@@ -10,7 +10,7 @@ from flat_price import import_flat_price
 from clean import *
 
 # Creating an Environmental Variable for the service key configuration
-# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/opt/airflow/dags/configs/ServiceKey_GoogleCloud.json'
+# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/opt/airflow/dags/ServiceKey_GoogleCloud.json'
 
 default_args = {
     "start_date": datetime.datetime.today(),
