@@ -5,8 +5,7 @@ from airflow.operators.python import PythonOperator
 import datetime
 import os
 import sys
-from utils import create_array_first_last_day_of_year
-from api_nbp import import_usd_prices
+from api_nbp import save_usd_df
 from flat_price import import_flat_price
 from clean import *
 
@@ -22,20 +21,7 @@ with DAG(dag_id="NBP-flats", default_args=default_args, catchup=False) as dag:
 
     @task
     def import_currency():
-        start_year = 2006
-        end_year = 2023
-        first_last_days_of_years = create_array_first_last_day_of_year(
-            start_year, end_year
-        )
-
-        with open("data/usd.csv", "w") as file:
-            for date in first_last_days_of_years:
-                gold_prices_data = import_usd_prices(date)
-
-                if gold_prices_data:
-                    for date, price in gold_prices_data:
-                        print(f"{date},{price:.2f}")
-                        file.write(f"{date},{price:.2f}\n")
+       save_usd_df()
 
     @task
     def import_flat_data():
@@ -64,10 +50,11 @@ with DAG(dag_id="NBP-flats", default_args=default_args, catchup=False) as dag:
         clean_data_m1()
         clean_data_currency()
 
+    @task
+    def create_report():
+        clean()
 
     # Dependencies
-    import_currency() 
-    import_flat_data ()
-    clean()
+    import_currency() >> import_flat_data() >> clean() >> create_report()
         
     

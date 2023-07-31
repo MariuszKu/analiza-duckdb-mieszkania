@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 import requests
 import json
+import gcsfs
 from utils import create_array_first_last_day_of_year
-
 
 
 def import_gold_prices(date: tuple) -> list[(str, str)]:
@@ -25,7 +25,6 @@ def import_gold_prices(date: tuple) -> list[(str, str)]:
         date = cena_zlota["data"]
         price = cena_zlota["cena"]
         gold_prices.append((date, price))
-        print(cena_zlota)
 
     return gold_prices
 
@@ -50,22 +49,47 @@ def import_usd_prices(date: tuple[str, str]) -> list[(str, str)]:
         date = cena_usd["effectiveDate"]
         price = cena_usd["mid"]
         prices.append((date, price))
-        print(cena_usd)
-
+        
     return prices
 
+def save_gold_df() -> None:
+    start_year = 2013 
+    end_year = 2023
+    fs = gcsfs.GCSFileSystem()
+    first_last_days_of_years = create_array_first_last_day_of_year(start_year, end_year)
     
+    with fs.open("gs://mk-dev-gcs/data/gold_2013.csv", "w") as file:
+        for date in first_last_days_of_years:
+            
+            arr_gold = import_gold_prices(date)
+     
+            for date, price in arr_gold:
+                #print(f"{date},{price:.2f}")
+                file.write(f"{date},{price:.2f}\n")
+    fs.put("data/gold.csv","gs://mk-dev-gcs/data/gold.csv")    
 
-if __name__ == "__main__":
+   
+def save_usd_df() -> None:
+    """
+    Saves USD dataframe
+
+    Args:
+    Returns:
+    """
     start_year = 2006
     end_year = 2023
     first_last_days_of_years = create_array_first_last_day_of_year(start_year, end_year)
-
-    with open("data/usd.csv", "w") as file:
+    fs = gcsfs.GCSFileSystem()
+    with fs.open("gs://mk-dev-gcs/data/usd.csv", "w") as file:
         for date in first_last_days_of_years:
             gold_prices_data = import_usd_prices(date)
 
             if gold_prices_data:
                 for date, price in gold_prices_data:
-                    print(f"{date},{price:.2f}")
+                    #print(f"{date},{price:.2f}")
                     file.write(f"{date},{price:.2f}\n")
+
+if __name__ == "__main__":
+    save_gold_df()
+    save_usd_df()
+
