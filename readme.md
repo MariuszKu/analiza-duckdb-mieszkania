@@ -1,4 +1,17 @@
-# create table
+# Airflow configuration and installation
+git clone https://github.com/MariuszKu/analiza-duckdb-mieszkania.git
+cd analiza-duckdb-mieszkania
+chmod +x deploy.sh
+./deploy.sh
+
+# If you want to work with GCP you need to upload your secrete key and change the working path in env.py file
+
+LINK = "gs://mk-dev-gcs/data/" # for GCP
+LINK = 'data/' #for local
+LINK = "/opt/airflow/dags/data/" # for airflow local
+
+
+# create table in BigQuery
 
 create or replace EXTERNAL table mk.flats_report
 OPTIONS(
