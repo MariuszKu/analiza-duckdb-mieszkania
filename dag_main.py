@@ -8,7 +8,7 @@ import sys
 from api_nbp import save_usd_df
 from flat_price import import_flat_price
 from clean import *
-from main import report
+from falts_report import report
 
 # Creating an Environmental Variable for the service key configuration
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/opt/airflow/dags/key.json'
