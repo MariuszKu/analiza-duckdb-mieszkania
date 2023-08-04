@@ -1,3 +1,7 @@
+# Flat analyzes
+
+This code imports data from NBP website and creates a report using Airflow, GCP and DuckDB
+
 # Airflow configuration and installation
 ```
 git clone https://github.com/MariuszKu/analiza-duckdb-mieszkania.git
@@ -6,6 +10,9 @@ chmod +x deploy.sh
 ./deploy.sh
 ```
 # If you want to work with GCP you need to upload your secrete key and change the working path in env.py file
+Location for key 
+dags/key.json
+
 ```
 LINK = "gs://mk-dev-gcs/data/" # for GCP
 LINK = 'data/' #for local
