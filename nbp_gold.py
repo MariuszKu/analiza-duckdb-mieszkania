@@ -1,6 +1,6 @@
 from selenium import webdriver 
 from selenium.webdriver.common.by import By 
-from selenium.webdriver.chrome.service import Service as ChromeService 
+from selenium.webdriver.chrome.service import Service 
 from webdriver_manager.chrome import ChromeDriverManager 
 from datetime import datetime, timedelta
 
@@ -25,21 +25,20 @@ def generate_last_days_of_months(start_date, end_date):
     return date_list
 
 
-start_date = "01-01-2007"
+start_date = "01-01-2006"
 end_date = "31-12-2012"
 last_days_of_months = generate_last_days_of_months(start_date, end_date)
 
 # instantiate options 
 options = webdriver.ChromeOptions() 
- 
 # run browser in headless mode 
-options.headless = True 
- 
+options.add_argument("--headless=new")
+
 # instantiate driver 
-driver = webdriver.Chrome(service=ChromeService( 
-	ChromeDriverManager().install()), options=options) 
+service = Service()
+driver = webdriver.Chrome(service=service, options=options)
  
-with open("data/gold.csv","a+") as file:
+with open("data/gold_2006_2012.csv","a+") as file:
     for last_day in last_days_of_months:
         url = f'https://nbp.pl/cena-zlota-archiwum/cena-zlota-z-dnia-{last_day}/' 
         

@@ -6,9 +6,13 @@ import env
 
 
 def clean_flats():
-    flats = pd.read_excel(f"{env.LINK}flat_prices.xlsx", header=6, sheet_name="Rynek pierwotny")
+    flats = pd.read_excel(f"{env.LINK}flat_prices.xlsx", header=6, usecols="X:AO", sheet_name="Rynek pierwotny")
     cities = ['Białystok','Bydgoszcz','Gdańsk','Gdynia','Katowice','Kielce','Kraków','Lublin','Łódź','Olsztyn','Opole',
     'Poznań','Rzeszów','Szczecin','Warszawa','Wrocław','Zielona Góra']
+    flats.columns = flats.columns.str.replace(".1", "")
+    flats.columns = flats.columns.str.replace("*", "")
+    print(flats.head())
+    flats = flats[flats['Kwartał'].notna()]
     flats_unpivot = pd.melt(flats, id_vars='Kwartał', value_vars=cities)
     flats_unpivot['date'] = flats_unpivot.apply(lambda row: convert_to_last_day_of_quarter(row['Kwartał']),axis=1)
     flats_unpivot['date'] = pd.to_datetime(flats_unpivot['date'])
@@ -37,7 +41,7 @@ def clean_m1():
 def clean_currency():
     
     gold = pd.read_csv(f"{env.LINK}gold.csv", names=["date","price"], header=None)
-    gold2013 = pd.read_csv(f"{env.LINK}gold_2013.csv", names=["date","price"], header=None)
+    gold2013 = pd.read_csv(f"{env.LINK}gold_2006_2012.csv", names=["date","price"], header=None)
     gold['date'] = pd.to_datetime(gold['date'])
     gold2013['date'] = pd.to_datetime(gold2013['date'])
     gold['currency'] = 'gold'

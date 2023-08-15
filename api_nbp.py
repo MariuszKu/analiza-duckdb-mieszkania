@@ -60,15 +60,12 @@ def save_gold_df() -> None:
     fs = gcsfs.GCSFileSystem()
     first_last_days_of_years = create_array_first_last_day_of_year(start_year, end_year)
     arr = []
-    #with fs.open("gs://mk-dev-gcs/data/gold_2013.csv", "w") as file:
+
     for date in first_last_days_of_years:
             
         arr_gold = import_gold_prices(date)
         arr.extend(arr_gold)
-        # for date, price in arr_gold:
-                #print(f"{date},{price:.2f}")
 
-    #        file.write(f"{date},{price:.2f}\n")
     if 'gs://' in env.LINK:
         fs.put("data/gold.csv",f"{env.LINK}gold.csv")
     pd.DataFrame(arr).to_csv(f'{env.LINK}gold.csv', index=False, header=None)   
@@ -86,15 +83,12 @@ def save_usd_df() -> None:
     first_last_days_of_years = create_array_first_last_day_of_year(start_year, end_year)
     arr = []
     fs = gcsfs.GCSFileSystem()
-    #with fs.open("gs://mk-dev-gcs/data/usd.csv", "w") as file:
+
     for date in first_last_days_of_years:
         gold_prices_data = import_usd_prices(date)
         arr.extend(gold_prices_data)
-        pd.DataFrame(arr).to_csv(f'{env.LINK}gold.csv', index=False, header=None) 
-        #if gold_prices_data:
-            #for date, price in gold_prices_data:
-                #print(f"{date},{price:.2f}")
-                #file.write(f"{date},{price:.2f}\n")
+        pd.DataFrame(arr).to_csv(f'{env.LINK}usd.csv', index=False, header=None) 
+
 
 if __name__ == "__main__":
     save_gold_df()
